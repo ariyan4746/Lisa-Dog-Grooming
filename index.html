@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisa's Pet Grooming – Irvine, CA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ==================== RESET & BASE ==================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#FDFAF5;
+  color:#1C3A2F;
+  cursor:none;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ==================== CUSTOM CURSOR ==================== */
+#cursor{
+  position:fixed;
+  width:36px;height:36px;
+  pointer-events:none;
+  z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.08s ease;
+  font-size:26px;
+  line-height:1;
+  text-align:center;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+  will-change:transform;
+}
+#cursor.clicking{transform:translate(-50%,-50%) scale(1.4) rotate(-20deg)}
+.cursor-trail{
+  position:fixed;
+  pointer-events:none;
+  z-index:99998;
+  font-size:14px;
+  opacity:0.7;
+  animation:trail-fade 0.8s ease forwards;
+  transform:translate(-50%,-50%);
+}
+@keyframes trail-fade{
+  0%{opacity:0.7;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(0.3) translateY(-20px)}
+}
+
+/* ==================== CLICK EMOJI BURST ==================== */
+.emoji-burst{
+  position:fixed;
+  pointer-events:none;
+  z-index:99997;
+  font-size:20px;
+  animation:burst-fly var(--dur,1.2s) ease-out forwards;
+  transform:translate(-50%,-50%);
+}
+@keyframes burst-fly{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(0.5)}
+  20%{opacity:1;transform:translate(calc(-50% + var(--dx)*0.3),calc(-50% + var(--dy)*0.3)) scale(1.2)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0.6)}
+}
+
+/* ==================== HIDDEN PET ANIMATIONS ==================== */
+.sneaky-cat{
+  position:fixed;
+  bottom:-60px;
+  font-size:44px;
+  z-index:9999;
+  pointer-events:none;
+  animation:cat-peek 12s ease-in-out infinite;
+  filter:drop-shadow(0 -4px 8px rgba(0,0,0,0.2));
+}
+.sneaky-cat.left{left:30px;animation-delay:0s}
+.sneaky-cat.right{right:30px;animation-delay:6s;animation-name:cat-peek-right}
+@keyframes cat-peek{
+  0%,60%,100%{transform:translateY(0)}
+  65%{transform:translateY(-80px)}
+  75%{transform:translateY(-70px) rotate(-5deg)}
+  85%{transform:translateY(-80px) rotate(5deg)}
+  92%{transform:translateY(-75px)}
+  96%{transform:translateY(0)}
+}
+@keyframes cat-peek-right{
+  0%,70%,100%{transform:translateY(0) scaleX(-1)}
+  75%{transform:translateY(-90px) scaleX(-1)}
+  82%{transform:translateY(-80px) scaleX(-1) rotate(4deg)}
+  90%{transform:translateY(-85px) scaleX(-1)}
+  96%{transform:translateY(0) scaleX(-1)}
+}
+
+.sneaky-dog{
+  position:fixed;
+  font-size:38px;
+  z-index:9999;
+  pointer-events:none;
+  animation:dog-slide 18s ease-in-out infinite;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.18));
+}
+.sneaky-dog.left{left:-60px;top:45%;animation-name:dog-slide-left;animation-delay:4s}
+.sneaky-dog.right{right:-60px;top:55%;animation-name:dog-slide-right;animation-delay:10s}
+@keyframes dog-slide-left{
+  0%,40%,100%{transform:translateX(0)}
+  45%{transform:translateX(70px) rotate(10deg)}
+  55%{transform:translateX(65px) rotate(-8deg)}
+  60%{transform:translateX(70px) rotate(0)}
+  65%{transform:translateX(0)}
+}
+@keyframes dog-slide-right{
+  0%,50%,100%{transform:translateX(0) scaleX(-1)}
+  55%{transform:translateX(-75px) scaleX(-1) rotate(-8deg)}
+  65%{transform:translateX(-70px) scaleX(-1) rotate(6deg)}
+  70%{transform:translateX(-75px) scaleX(-1)}
+  76%{transform:translateX(0) scaleX(-1)}
+}
+
+/* floating paw in corner */
+.corner-paw{
+  position:fixed;
+  font-size:22px;
+  pointer-events:none;
+  z-index:9998;
+  opacity:0;
+  animation:corner-wink 20s ease-in-out infinite;
+}
+.corner-paw.tl{top:12px;left:12px;animation-delay:3s}
+.corner-paw.tr{top:12px;right:12px;animation-delay:8s}
+.corner-paw.bl{bottom:90px;left:12px;animation-delay:14s}
+.corner-paw.br{bottom:90px;right:12px;animation-delay:19s}
+@keyframes corner-wink{
+  0%,80%,100%{opacity:0;transform:scale(0.5) rotate(-20deg)}
+  82%{opacity:1;transform:scale(1.3) rotate(10deg)}
+  88%{opacity:0.8;transform:scale(1) rotate(-5deg)}
+  94%{opacity:1;transform:scale(1.1) rotate(5deg)}
+  98%{opacity:0;transform:scale(0.5)}
+}
+
+/* ==================== NAVBAR ==================== */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:1000;
+  padding:18px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(253,250,245,0.85);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(212,168,67,0.15);
+  transition:padding 0.3s,box-shadow 0.3s;
+}
+nav.scrolled{padding:12px 40px;box-shadow:0 4px 30px rgba(28,58,47,0.08)}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Playfair Display',serif;
+  font-weight:900;font-size:1.4rem;
+  color:#1C3A2F;letter-spacing:-0.02em;
+  text-decoration:none;
+}
+.nav-logo span{color:#D4A843}
+.nav-paw{font-size:1.2rem;animation:nav-paw-spin 4s ease-in-out infinite}
+@keyframes nav-paw-spin{
+  0%,100%{transform:rotate(0)}50%{transform:rotate(20deg) scale(1.2)}
+}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{
+  font-size:0.9rem;font-weight:500;
+  color:#1C3A2F;text-decoration:none;
+  position:relative;letter-spacing:0.04em;
+  padding-bottom:4px;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:#D4A843;
+  transform:scaleX(0);transform-origin:right;
+  transition:transform 0.3s ease;
+}
+.nav-links a:hover::after,.nav-links a:hover{color:#D4A843;transform-origin:left}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  background:#1C3A2F;color:#FDFAF5!important;
+  padding:10px 22px;border-radius:100px;
+  font-weight:600!important;
+  transition:background 0.3s,transform 0.2s,box-shadow 0.3s!important;
+  box-shadow:0 4px 20px rgba(28,58,47,0.25);
+}
+.nav-cta:hover{
+  background:#D4A843!important;color:#1C3A2F!important;
+  transform:translateY(-2px)!important;
+  box-shadow:0 8px 30px rgba(212,168,67,0.4)!important;
+}
+.nav-cta::after{display:none!important}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none}
+.hamburger span{width:24px;height:2px;background:#1C3A2F;border-radius:2px;transition:all 0.3s}
+
+/* ==================== HERO ==================== */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:120px 40px 80px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#FDFAF5 0%,#F4E8D5 40%,#E8E2F0 100%);
+  z-index:0;
+}
+/* animated blob bg */
+.hero-blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:0.35;
+  animation:blob-float 8s ease-in-out infinite;
+  z-index:0;
+}
+.hero-blob.b1{width:500px;height:500px;background:#F4C5C5;top:-100px;right:100px;animation-delay:0s}
+.hero-blob.b2{width:350px;height:350px;background:#D4A843;bottom:-80px;left:50px;opacity:0.2;animation-delay:3s}
+.hero-blob.b3{width:250px;height:250px;background:#c5d4e8;top:50%;left:40%;animation-delay:5s}
+@keyframes blob-float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-30px) scale(1.05)}
+  66%{transform:translate(-20px,20px) scale(0.95)}
+}
+.hero-inner{
+  max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+  position:relative;z-index:1;
+}
+.hero-text{}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid rgba(212,168,67,0.3);
+  padding:8px 18px;border-radius:100px;
+  font-size:0.8rem;font-weight:600;
+  color:#D4A843;letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:24px;
+  box-shadow:0 4px 15px rgba(212,168,67,0.15);
+  animation:badge-float 3s ease-in-out infinite;
+}
+@keyframes badge-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.8rem,5vw,4.2rem);
+  font-weight:900;line-height:1.05;
+  color:#1C3A2F;
+  margin-bottom:20px;
+}
+h1 em{
+  font-style:italic;
+  color:#D4A843;
+  position:relative;display:inline-block;
+}
+h1 em::after{
+  content:'';position:absolute;
+  bottom:-4px;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#D4A843,#F4C5C5);
+  border-radius:2px;
+  animation:underline-grow 1s 0.8s ease both;
+  transform-origin:left;
+}
+@keyframes underline-grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hero-sub{
+  font-size:1.1rem;color:#4a6a5a;
+  line-height:1.7;margin-bottom:36px;max-width:480px;
+  font-weight:400;
+}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{
+  background:linear-gradient(135deg,#1C3A2F,#2a5640);
+  color:#FDFAF5;padding:16px 34px;border-radius:100px;
+  font-size:1rem;font-weight:600;
+  text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 8px 30px rgba(28,58,47,0.3);
+  transition:transform 0.3s,box-shadow 0.3s;
+  cursor:none;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,168,67,0.4),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 45px rgba(28,58,47,0.35)}
+.btn-primary:hover::before{opacity:1}
+.btn-secondary{
+  background:transparent;
+  border:2px solid #1C3A2F;
+  color:#1C3A2F;padding:14px 30px;border-radius:100px;
+  font-size:1rem;font-weight:600;
+  text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  transition:all 0.3s;cursor:none;
+}
+.btn-secondary:hover{background:#1C3A2F;color:#FDFAF5;transform:translateY(-3px)}
+.hero-stats{
+  display:flex;gap:32px;margin-top:44px;flex-wrap:wrap;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:900;color:#D4A843;display:block;
+}
+.stat-label{font-size:0.75rem;font-weight:600;color:#4a6a5a;text-transform:uppercase;letter-spacing:0.08em}
+/* hero image */
+.hero-img-wrap{
+  position:relative;display:flex;justify-content:center;
+  animation:hero-float 5s ease-in-out infinite;
+}
+@keyframes hero-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-18px)}
+}
+.hero-img-ring{
+  position:absolute;
+  width:420px;height:420px;
+  border-radius:50%;
+  border:2px dashed rgba(212,168,67,0.4);
+  animation:ring-spin 20s linear infinite;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.hero-img-ring.r2{
+  width:480px;height:480px;
+  border:2px dashed rgba(244,197,197,0.4);
+  animation-direction:reverse;
+  animation-duration:28s;
+}
+@keyframes ring-spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-img{
+  width:360px;height:360px;
+  border-radius:50%;
+  object-fit:cover;object-position:center top;
+  border:6px solid #fff;
+  box-shadow:0 20px 60px rgba(28,58,47,0.2),0 0 0 12px rgba(212,168,67,0.1);
+  position:relative;z-index:2;
+}
+/* floating emojis on hero image */
+.float-emoji{
+  position:absolute;z-index:3;
+  font-size:28px;
+  animation:emoji-orbit var(--spd,6s) ease-in-out infinite;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+}
+.float-emoji:nth-child(1){top:10%;right:5%;--spd:5s}
+.float-emoji:nth-child(2){bottom:12%;right:0%;--spd:7s;animation-delay:-2s}
+.float-emoji:nth-child(3){top:15%;left:5%;--spd:6s;animation-delay:-4s}
+.float-emoji:nth-child(4){bottom:20%;left:0%;--spd:8s;animation-delay:-1s}
+@keyframes emoji-orbit{
+  0%,100%{transform:translate(0,0) rotate(0)}
+  25%{transform:translate(8px,-12px) rotate(15deg)}
+  50%{transform:translate(16px,0) rotate(0)}
+  75%{transform:translate(8px,12px) rotate(-15deg)}
+}
+/* scroll arrow */
+.scroll-arrow{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.scroll-arrow span{
+  display:block;width:18px;height:18px;
+  border-right:2px solid #D4A843;border-bottom:2px solid #D4A843;
+  transform:rotate(45deg);
+  animation:arrow-bounce 1.4s ease infinite;
+}
+.scroll-arrow span:nth-child(2){animation-delay:0.2s;opacity:0.6}
+.scroll-arrow span:nth-child(3){animation-delay:0.4s;opacity:0.3}
+@keyframes arrow-bounce{0%,100%{transform:rotate(45deg) translate(0,0);opacity:0.4}50%{transform:rotate(45deg) translate(3px,3px);opacity:1}}
+
+/* ==================== SECTION BASICS ==================== */
+section{padding:100px 40px;position:relative}
+.container{max-width:1200px;margin:0 auto;width:100%}
+.section-eyebrow{
+  font-size:0.8rem;font-weight:700;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:#D4A843;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-eyebrow::before{
+  content:'';display:block;width:30px;height:2px;background:#D4A843;border-radius:1px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:900;color:#1C3A2F;
+  line-height:1.1;margin-bottom:16px;
+}
+.section-sub{
+  font-size:1.05rem;color:#4a6a5a;line-height:1.7;max-width:560px;
+}
+
+/* reveal animation */
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity 0.8s ease,transform 0.8s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal.delay-1{transition-delay:0.1s}
+.reveal.delay-2{transition-delay:0.2s}
+.reveal.delay-3{transition-delay:0.3s}
+.reveal.delay-4{transition-delay:0.4s}
+
+/* ==================== ABOUT STRIP ==================== */
+.about-strip{
+  background:#1C3A2F;
+  padding:40px 40px;
+  overflow:hidden;
+}
+.about-strip-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;gap:60px;flex-wrap:wrap;
+  justify-content:space-between;
+}
+.about-strip-text{
+  color:#FDFAF5;font-size:1.25rem;font-weight:300;
+  font-family:'Playfair Display',serif;font-style:italic;
+  line-height:1.5;flex:1;min-width:260px;
+}
+.about-strip-text strong{color:#D4A843;font-style:normal;font-weight:700}
+.strip-icons{
+  display:flex;gap:24px;align-items:center;
+}
+.strip-icon-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:#D4A843;font-size:0.75rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;
+}
+.strip-icon-item i{font-size:1.6rem;color:#F4C5C5}
+
+/* ==================== SERVICES ==================== */
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:28px;margin-top:56px;
+}
+.service-card{
+  background:#fff;
+  border-radius:24px;padding:36px;
+  border:1px solid rgba(212,168,67,0.12);
+  position:relative;overflow:hidden;
+  transition:transform 0.4s ease,box-shadow 0.4s ease,border-color 0.3s;
+  cursor:none;
+}
+.service-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#D4A843,#F4C5C5);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s ease;
+}
+.service-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 60px rgba(28,58,47,0.12);
+  border-color:rgba(212,168,67,0.35);
+}
+.service-card:hover::before{transform:scaleX(1)}
+/* pet hiding in card corner */
+.service-card::after{
+  content:var(--pet,'🐾');
+  position:absolute;bottom:-20px;right:-10px;
+  font-size:48px;
+  opacity:0.07;
+  transition:all 0.4s ease;
+  transform:rotate(-15deg);
+}
+.service-card:hover::after{
+  opacity:0.18;
+  transform:rotate(-5deg) scale(1.2);
+  bottom:8px;right:8px;
+}
+.service-icon{
+  width:60px;height:60px;
+  background:linear-gradient(135deg,#F4E8D5,#fef6ea);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;margin-bottom:20px;
+  transition:transform 0.3s;
+}
+.service-card:hover .service-icon{transform:rotate(10deg) scale(1.1)}
+.service-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:700;
+  color:#1C3A2F;margin-bottom:10px;
+}
+.service-desc{font-size:0.9rem;color:#4a6a5a;line-height:1.65}
+.service-tag{
+  display:inline-block;margin-top:16px;
+  padding:6px 14px;border-radius:100px;
+  background:#F4E8D5;color:#D4A843;
+  font-size:0.78rem;font-weight:700;
+  letter-spacing:0.04em;
+  transition:background 0.3s,color 0.3s;
+}
+.service-card:hover .service-tag{background:#D4A843;color:#fff}
+
+/* ==================== WHY LISA ==================== */
+.why-section{background:linear-gradient(135deg,#F4E8D5 0%,#E8E2F0 100%)}
+.why-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+.why-img-block{position:relative}
+.why-img-main{
+  width:100%;border-radius:32px;
+  object-fit:cover;height:480px;
+  box-shadow:0 20px 60px rgba(28,58,47,0.15);
+}
+.why-badge{
+  position:absolute;
+  bottom:30px;left:-30px;
+  background:#1C3A2F;color:#FDFAF5;
+  padding:18px 28px;border-radius:20px;
+  box-shadow:0 10px 40px rgba(28,58,47,0.25);
+}
+.why-badge-num{
+  font-family:'Playfair Display',serif;
+  font-size:2.5rem;font-weight:900;color:#D4A843;
+  display:block;line-height:1;
+}
+.why-badge-txt{font-size:0.8rem;font-weight:600;letter-spacing:0.06em;opacity:0.8;margin-top:4px}
+.why-floating-pet{
+  position:absolute;top:-20px;right:-20px;
+  font-size:3rem;
+  animation:why-pet-bob 3s ease-in-out infinite;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+}
+@keyframes why-pet-bob{
+  0%,100%{transform:rotate(-10deg) scale(1)}
+  50%{transform:rotate(10deg) scale(1.15) translateY(-5px)}
+}
+.why-features{margin-top:36px;display:flex;flex-direction:column;gap:20px}
+.why-feature{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:20px;border-radius:16px;
+  background:#fff;
+  border:1px solid rgba(212,168,67,0.1);
+  transition:transform 0.3s,box-shadow 0.3s;
+  cursor:none;
+}
+.why-feature:hover{transform:translateX(8px);box-shadow:0 8px 30px rgba(212,168,67,0.12)}
+.why-feature-icon{
+  width:44px;height:44px;min-width:44px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#D4A843,#e8c060);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:#fff;
+}
+.why-feature-txt h4{font-weight:700;color:#1C3A2F;margin-bottom:4px;font-size:1rem}
+.why-feature-txt p{font-size:0.88rem;color:#4a6a5a;line-height:1.55}
+
+/* ==================== GALLERY ==================== */
+.gallery-section{background:#FDFAF5}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:auto auto;
+  gap:16px;margin-top:56px;
+}
+.g-item{
+  border-radius:20px;overflow:hidden;
+  position:relative;
+  transition:transform 0.4s ease,box-shadow 0.4s;
+  cursor:none;
+}
+.g-item:first-child{grid-column:span 2;grid-row:span 2}
+.g-item:hover{transform:scale(1.03);box-shadow:0 20px 50px rgba(0,0,0,0.15)}
+.g-item img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform 0.5s ease;
+}
+.g-item:hover img{transform:scale(1.08)}
+.g-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(28,58,47,0.6),transparent);
+  opacity:0;
+  display:flex;align-items:flex-end;padding:20px;
+  transition:opacity 0.3s;
+}
+.g-item:hover .g-overlay{opacity:1}
+.g-overlay span{
+  color:#fff;font-weight:600;font-size:0.9rem;
+  letter-spacing:0.04em;
+}
+/* emoji hover hog effect on gallery */
+.g-item:hover::after{
+  content:var(--emoji,'🐕');
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:3.5rem;
+  pointer-events:none;
+  z-index:5;
+  animation:hog-pop 0.4s ease;
+}
+@keyframes hog-pop{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:0}
+  50%{transform:translate(-50%,-50%) scale(1.3);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1}
+}
+
+/* ==================== TESTIMONIALS ==================== */
+.testimonials-section{
+  background:linear-gradient(180deg,#1C3A2F 0%,#162e25 100%);
+  overflow:hidden;
+}
+.testimonials-section .section-eyebrow{color:#D4A843}
+.testimonials-section .section-title{color:#FDFAF5}
+.testi-track-wrap{overflow:hidden;margin-top:56px}
+.testi-track{
+  display:flex;gap:24px;
+  animation:scroll-left 28s linear infinite;
+  width:max-content;
+}
+.testi-track:hover{animation-play-state:paused}
+@keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.testi-card{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;padding:32px;
+  width:340px;flex-shrink:0;
+  backdrop-filter:blur(10px);
+}
+.testi-stars{color:#D4A843;font-size:0.9rem;margin-bottom:12px;letter-spacing:2px}
+.testi-text{
+  font-size:0.95rem;color:rgba(255,255,255,0.85);
+  line-height:1.7;margin-bottom:20px;
+  font-style:italic;
+}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#D4A843,#F4C5C5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.testi-name{font-weight:700;color:#fff;font-size:0.9rem}
+.testi-pet{font-size:0.78rem;color:rgba(255,255,255,0.5)}
+
+/* ==================== CONTACT ==================== */
+.contact-section{background:#FDFAF5}
+.contact-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:start;
+}
+.contact-info{}
+.contact-details{margin-top:36px;display:flex;flex-direction:column;gap:20px}
+.contact-item{
+  display:flex;gap:18px;align-items:center;
+  padding:18px 24px;border-radius:16px;
+  background:#fff;border:1px solid rgba(212,168,67,0.15);
+  text-decoration:none;color:inherit;
+  transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;
+  cursor:none;
+}
+.contact-item:hover{
+  transform:translateX(8px);
+  box-shadow:0 8px 30px rgba(212,168,67,0.12);
+  border-color:rgba(212,168,67,0.4);
+}
+.contact-item-icon{
+  width:46px;height:46px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#1C3A2F,#2a5640);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:#D4A843;
+  flex-shrink:0;
+}
+.contact-item-info span{font-size:0.78rem;color:#4a6a5a;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.contact-item-info strong{display:block;font-size:1.05rem;font-weight:700;color:#1C3A2F;margin-top:2px}
+/* contact form card */
+.contact-form-card{
+  background:#fff;border-radius:28px;
+  padding:44px;border:1px solid rgba(212,168,67,0.15);
+  box-shadow:0 20px 60px rgba(28,58,47,0.08);
+}
+.contact-form-card h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;font-weight:800;color:#1C3A2F;margin-bottom:8px;
+}
+.contact-form-card p{font-size:0.9rem;color:#4a6a5a;margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{
+  display:block;font-size:0.82rem;font-weight:700;
+  color:#1C3A2F;margin-bottom:8px;letter-spacing:0.04em;
+}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:14px 18px;
+  border-radius:12px;border:1.5px solid rgba(28,58,47,0.12);
+  font-family:'DM Sans',sans-serif;font-size:0.95rem;
+  color:#1C3A2F;background:#FDFAF5;
+  outline:none;transition:border-color 0.3s,box-shadow 0.3s;
+  cursor:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:#D4A843;
+  box-shadow:0 0 0 4px rgba(212,168,67,0.12);
+}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-submit{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,#1C3A2F,#2a5640);
+  color:#FDFAF5;border:none;
+  border-radius:14px;font-size:1rem;font-weight:700;
+  font-family:'DM Sans',sans-serif;
+  cursor:none;
+  transition:transform 0.3s,box-shadow 0.3s,background 0.3s;
+  box-shadow:0 8px 30px rgba(28,58,47,0.25);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.form-submit:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 45px rgba(28,58,47,0.35);
+  background:linear-gradient(135deg,#D4A843,#c09030);
+}
+
+/* ==================== FOOTER ==================== */
+footer{
+  background:#0f2018;
+  padding:60px 40px 30px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+footer::before{
+  content:'🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾';
+  position:absolute;top:0;left:0;right:0;
+  font-size:1.2rem;letter-spacing:8px;opacity:0.04;
+  white-space:nowrap;overflow:hidden;
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem;font-weight:900;color:#FDFAF5;
+  margin-bottom:8px;
+}
+.footer-logo span{color:#D4A843}
+.footer-sub{font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:28px}
+.footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:32px;flex-wrap:wrap}
+.footer-links a{
+  color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;
+  transition:color 0.2s;
+}
+.footer-links a:hover{color:#D4A843}
+.footer-copy{font-size:0.78rem;color:rgba(255,255,255,0.25);line-height:1.8}
+/* social icons footer */
+.social-row{display:flex;justify-content:center;gap:16px;margin-bottom:28px}
+.social-btn{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.5);font-size:1rem;
+  text-decoration:none;
+  transition:background 0.3s,color 0.3s,transform 0.3s;
+  cursor:none;
+}
+.social-btn:hover{background:#D4A843;color:#1C3A2F;transform:translateY(-4px)}
+
+/* ==================== HOG HOVER EFFECT (unique) ==================== */
+/* When hovering certain elements, paw prints "walk" across them */
+.hog-hover{position:relative;overflow:hidden}
+.hog-hover .paw-walker{
+  position:absolute;
+  top:50%;left:-60px;
+  transform:translateY(-50%);
+  font-size:20px;
+  pointer-events:none;
+  opacity:0;
+  transition:none;
+  animation:none;
+}
+.hog-hover:hover .paw-walker{
+  opacity:1;
+  animation:paw-walk 0.8s ease forwards;
+}
+@keyframes paw-walk{
+  0%{left:-60px;opacity:1;transform:translateY(-50%) rotate(-30deg)}
+  100%{left:calc(100% + 20px);opacity:0.6;transform:translateY(-60%) rotate(20deg)}
+}
+
+/* ==================== PHONE STICKY BAR (MOBILE) ==================== */
+.sticky-call{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:#1C3A2F;
+  padding:14px 24px;
+  align-items:center;justify-content:center;gap:12px;
+  z-index:999;
+  text-decoration:none;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.2);
+}
+.sticky-call span{color:#FDFAF5;font-weight:700;font-size:1rem}
+.sticky-call i{color:#D4A843;font-size:1.1rem;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+/* ==================== MOBILE NAV ==================== */
+.mobile-menu{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(253,250,245,0.97);
+  backdrop-filter:blur(20px);
+  z-index:998;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:32px;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:700;color:#1C3A2F;
+  text-decoration:none;transition:color 0.2s;
+}
+.mobile-menu a:hover{color:#D4A843}
+.close-menu{
+  position:absolute;top:24px;right:24px;
+  background:none;border:none;font-size:1.8rem;
+  color:#1C3A2F;cursor:none;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;gap:40px}
+  .hero-img-wrap{order:-1}
+  .hero-img{width:260px;height:260px}
+  .hero-img-ring{width:300px;height:300px}
+  .hero-img-ring.r2{width:340px;height:340px}
+  .hero-sub,.section-sub{max-width:100%}
+  .hero-actions{justify-content:center}
+  .hero-stats{justify-content:center}
+  .why-inner{grid-template-columns:1fr}
+  .why-img-block{display:none}
+  .contact-inner{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .g-item:first-child{grid-column:span 2;grid-row:span 1}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  nav{padding:16px 24px}
+  section{padding:80px 24px}
+  .about-strip{padding:32px 24px}
+  .about-strip-inner{flex-direction:column;text-align:center}
+  .why-badge{left:auto;right:20px}
+  .sticky-call{display:flex}
+}
+@media(max-width:480px){
+  h1{font-size:2.2rem}
+  .hero{padding:100px 20px 60px}
+  .gallery-grid{grid-template-columns:1fr}
+  .g-item:first-child{grid-column:span 1}
+  .hero-img{width:220px;height:220px}
+  .hero-img-ring{width:256px;height:256px}
+  .hero-img-ring.r2{width:290px;height:290px}
+  .contact-form-card{padding:28px 20px}
+  footer{padding:50px 20px 80px}
+}
+
+/* Touch device cursor override */
+@media(hover:none){
+  body{cursor:auto}
+  #cursor,.cursor-trail{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== CUSTOM CURSOR ==================== -->
+<div id="cursor">🐱</div>
+
+<!-- ==================== SNEAKY HIDDEN PETS ==================== -->
+<div class="sneaky-cat left">😺</div>
+<div class="sneaky-cat right">🐱</div>
+<div class="sneaky-dog left">🐶</div>
+<div class="sneaky-dog right">🐕</div>
+<div class="corner-paw tl">🐾</div>
+<div class="corner-paw tr">🐾</div>
+<div class="corner-paw bl">🐾</div>
+<div class="corner-paw br">🐾</div>
+
+<!-- ==================== NAVBAR ==================== -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <span class="nav-paw">🐾</span>
+    Lisa's<span>&nbsp;Grooming</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Lisa</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="openMenu()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" onclick="closeMenu()">✕</button>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#why" onclick="closeMenu()">Why Lisa</a>
+  <a href="#gallery" onclick="closeMenu()">Gallery</a>
+  <a href="#reviews" onclick="closeMenu()">Reviews</a>
+  <a href="#contact" onclick="closeMenu()">📞 Book Now</a>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-blob b3"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge reveal">
+        <span>🌟</span> Irvine's Premier Pet Groomer
+      </div>
+      <h1 class="reveal delay-1">
+        Where Every Pup Gets <em>Royal</em> Treatment
+      </h1>
+      <p class="hero-sub reveal delay-2">
+        I'm Lisa — a passionate dog groomer dedicated to making your beloved pets look, feel, and smell absolutely wonderful. Because your furry family deserves the very best care.
+      </p>
+      <div class="hero-actions reveal delay-3">
+        <a href="#contact" class="btn-primary hog-hover">
+          <span class="paw-walker">🐾</span>
+          Book a Session <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="tel:4252098493" class="btn-secondary">
+          <i class="fas fa-phone"></i> 425-209-8493
+        </a>
+      </div>
+      <div class="hero-stats reveal delay-4">
+        <div class="stat">
+          <span class="stat-num">500+</span>
+          <span class="stat-label">Happy Pets</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">5★</span>
+          <span class="stat-label">Rating</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">3+</span>
+          <span class="stat-label">Yrs Experience</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-img-wrap reveal delay-2">
+      <div class="hero-img-ring"></div>
+      <div class="hero-img-ring r2"></div>
+      <div class="float-emoji">🐶</div>
+      <div class="float-emoji">🐱</div>
+      <div class="float-emoji">🐾</div>
+      <div class="float-emoji">✨</div>
+      <img
+        class="hero-img"
+        src="https://instagram.fdac80-1.fna.fbcdn.net/v/t51.82787-19/649858718_18056057114487124_7622467164022176476_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fdac80-1.fna.fbcdn.net&_nc_cat=104&_nc_oc=Q6cZ2gEgTo7BJW-AW3TeVFjI2oVa4njoHUYS19EaMGaGrmyWQGN6IB5a1jSPg1yrAjGCnUg&_nc_ohc=0NcKn5yUG8UQ7kNvwGg7Ldd&_nc_gid=O2GrqJY-DWYd7sTDIJh4-Q&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Af-S9AAseHfAU5mffU8Vt3yDY3QGW4YgzYihB-0fBI31Jg&oe=6A3569E3&_nc_sid=7a9f4b"
+        alt="Lisa – Professional Dog Groomer in Irvine"
+        onerror="this.src='https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop&crop=faces';this.onerror=null"
+      >
+    </div>
+  </div>
+  <div class="scroll-arrow">
+    <span></span><span></span><span></span>
+  </div>
+</section>
+
+<!-- ==================== ABOUT STRIP ==================== -->
+<div class="about-strip">
+  <div class="about-strip-inner">
+    <div class="about-strip-text">
+      <em>"I am a passionate dog groomer ready to take <strong>good care</strong> of your beloved pets — because every tail deserves to wag with joy."</em>
+    </div>
+    <div class="strip-icons">
+      <div class="strip-icon-item"><i class="fas fa-heart"></i><span>Gentle Care</span></div>
+      <div class="strip-icon-item"><i class="fas fa-leaf"></i><span>Natural Products</span></div>
+      <div class="strip-icon-item"><i class="fas fa-shield-alt"></i><span>Safe &amp; Trusted</span></div>
+      <div class="strip-icon-item"><i class="fas fa-star"></i><span>5-Star Rated</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SERVICES ==================== -->
+<section id="services">
+  <div class="container">
+    <div class="section-eyebrow reveal">Our Services</div>
+    <h2 class="section-title reveal delay-1">Grooming Packages <br>Tailored for Your Pet</h2>
+    <p class="section-sub reveal delay-2">From pampered bath sessions to complete style makeovers — we have everything your furry friend needs to look and feel their absolute best.</p>
+    <div class="services-grid">
+
+      <div class="service-card reveal" style="--pet:'🐕'">
+        <div class="service-icon">🛁</div>
+        <div class="service-name">Full Grooming Package</div>
+        <div class="service-desc">The complete luxury experience — bath, blow-dry, full haircut & styling, brush out, nail trimming, and thorough ear cleaning. Your pup leaves looking show-ready.</div>
+        <span class="service-tag">Most Popular ⭐</span>
+      </div>
+
+      <div class="service-card reveal delay-1" style="--pet:'🐶'">
+        <div class="service-icon">🚿</div>
+        <div class="service-name">Bath &amp; Brush Brush-Up</div>
+        <div class="service-desc">Deep cleansing shampoo, premium conditioning, professional blow-dry, thorough brushing, and a delightful fresh-scent spritz to make them irresistible.</div>
+        <span class="service-tag">Great Value</span>
+      </div>
+
+      <div class="service-card reveal delay-2" style="--pet:'🐣'">
+        <div class="service-icon">🌟</div>
+        <div class="service-name">Puppy's First Groom</div>
+        <div class="service-desc">A gentle, stress-free introduction designed for young pups. We take extra time to make them comfortable with the sounds, sensations, and tools — starting their grooming journey right.</div>
+        <span class="service-tag">For Puppies</span>
+      </div>
+
+      <div class="service-card reveal delay-3" style="--pet:'✨'">
+        <div class="service-icon">💅</div>
+        <div class="service-name">Add-On Specialty Care</div>
+        <div class="service-desc">Nail grinding, teeth brushing, de-shedding treatments, and hypoallergenic shampoo options. Customize your pup's session for their unique needs and skin type.</div>
+        <span class="service-tag">Customizable</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WHY LISA ==================== -->
+<section id="why" class="why-section">
+  <div class="container">
+    <div class="why-inner">
+      <div class="why-img-block reveal">
+        <div class="why-floating-pet">🐾</div>
+        <img
+          class="why-img-main"
+          src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&h=500&fit=crop"
+          alt="Happy dogs being groomed"
+          loading="lazy"
+        >
+        <div class="why-badge">
+          <span class="why-badge-num">100%</span>
+          <div class="why-badge-txt">Passion &amp; Love</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-eyebrow reveal">Why Choose Lisa</div>
+        <h2 class="section-title reveal delay-1">Your Pet's Comfort is Always Our Priority</h2>
+        <p class="section-sub reveal delay-2">Serving the Irvine community with genuine care and professional expertise. Every appointment is a personalized experience designed around your pet's unique needs.</p>
+        <div class="why-features">
+          <div class="why-feature reveal delay-2">
+            <div class="why-feature-icon"><i class="fas fa-heart"></i></div>
+            <div class="why-feature-txt">
+              <h4>Genuine Passion for Animals</h4>
+              <p>Lisa's love for animals isn't just a job — it's a calling. Every pet receives the same warmth and care she'd give her own.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal delay-3">
+            <div class="why-feature-icon"><i class="fas fa-user-check"></i></div>
+            <div class="why-feature-txt">
+              <h4>One-on-One Personalized Sessions</h4>
+              <p>No rush, no shortcuts. Each appointment is fully dedicated to your pet — no overlapping sessions, complete attention.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal delay-3">
+            <div class="why-feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="why-feature-txt">
+              <h4>Proudly Serving Irvine, CA</h4>
+              <p>Locally based and community-focused, serving Irvine and surrounding Orange County neighborhoods with premium grooming.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal delay-4">
+            <div class="why-feature-icon"><i class="fas fa-leaf"></i></div>
+            <div class="why-feature-txt">
+              <h4>Safe, Pet-Friendly Products</h4>
+              <p>We only use gentle, high-quality shampoos and conditioners — including hypoallergenic options for sensitive skin.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== GALLERY ==================== -->
+<section id="gallery" class="gallery-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Gallery</div>
+    <h2 class="section-title reveal delay-1">Happy Tails, Beautiful Looks</h2>
+    <div class="gallery-grid">
+      <div class="g-item reveal" style="height:380px;--emoji:'🐕'">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&h=500&fit=crop" alt="Golden dog groomed beautifully" loading="lazy">
+        <div class="g-overlay"><span>Golden Hour Groom ✨</span></div>
+      </div>
+      <div class="g-item reveal delay-1" style="height:180px;--emoji:'🐶'">
+        <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?w=400&h=250&fit=crop" alt="Dog after bath" loading="lazy">
+        <div class="g-overlay"><span>Post-Bath Glow 🛁</span></div>
+      </div>
+      <div class="g-item reveal delay-2" style="height:180px;--emoji:'🐾'">
+        <img src="https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=400&h=250&fit=crop" alt="Puppy first groom" loading="lazy">
+        <div class="g-overlay"><span>First Groom 🌟</span></div>
+      </div>
+      <div class="g-item reveal delay-3" style="height:180px;--emoji:'😺'">
+        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&h=250&fit=crop" alt="Well groomed dog" loading="lazy">
+        <div class="g-overlay"><span>Styled to Perfection 💅</span></div>
+      </div>
+      <div class="g-item reveal delay-1" style="height:180px;--emoji:'🐕'">
+        <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=250&fit=crop" alt="Happy dogs together" loading="lazy">
+        <div class="g-overlay"><span>Happy Paws 🐾</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section id="reviews" class="testimonials-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Testimonials</div>
+    <h2 class="section-title reveal delay-1">What Pet Parents Say</h2>
+  </div>
+  <div class="testi-track-wrap" style="margin-top:56px">
+    <div class="testi-track">
+      <!-- Cards set 1 -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Lisa is absolutely amazing with my Golden Retriever, Max! He used to be so anxious at the groomer, but she has such a calm and gentle energy. He comes back looking and smelling incredible every time."</p>
+        <div class="testi-author"><div class="testi-avatar">🐕</div><div><div class="testi-name">Sarah M.</div><div class="testi-pet">Golden Retriever Mom, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The puppy's first groom experience for my 4-month-old French Bulldog was beyond expectations. Lisa was so patient and made sure little Coco was completely comfortable. Will never go anywhere else!"</p>
+        <div class="testi-author"><div class="testi-avatar">🐶</div><div><div class="testi-name">James K.</div><div class="testi-pet">French Bulldog Dad, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I've tried 5 different groomers in Irvine before finding Lisa. The difference is night and day — she truly cares about the animals, not just the service. My two Poodles always look like they just stepped off a runway!"</p>
+        <div class="testi-author"><div class="testi-avatar">✂️</div><div><div class="testi-name">Emily R.</div><div class="testi-pet">Poodle Mom, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Lisa used the hypoallergenic shampoo for my sensitive-skin Bichon and the results were outstanding. No irritation, incredibly soft coat, and the most adorable haircut. This is the only groomer I trust."</p>
+        <div class="testi-author"><div class="testi-avatar">🌟</div><div><div class="testi-name">Monica T.</div><div class="testi-pet">Bichon Parent, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finally a groomer who takes her time! No rushing, no stressed pets. My Shih Tzu Bella comes home happy and relaxed. The de-shedding treatment has also made a massive difference at home. Highly recommend!"</p>
+        <div class="testi-author"><div class="testi-avatar">🐾</div><div><div class="testi-name">David L.</div><div class="testi-pet">Shih Tzu Dad, Irvine</div></div></div>
+      </div>
+      <!-- Duplicate set for infinite scroll -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Lisa is absolutely amazing with my Golden Retriever, Max! He used to be so anxious at the groomer, but she has such a calm and gentle energy. He comes back looking and smelling incredible every time."</p>
+        <div class="testi-author"><div class="testi-avatar">🐕</div><div><div class="testi-name">Sarah M.</div><div class="testi-pet">Golden Retriever Mom, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The puppy's first groom experience for my 4-month-old French Bulldog was beyond expectations. Lisa was so patient and made sure little Coco was completely comfortable. Will never go anywhere else!"</p>
+        <div class="testi-author"><div class="testi-avatar">🐶</div><div><div class="testi-name">James K.</div><div class="testi-pet">French Bulldog Dad, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I've tried 5 different groomers in Irvine before finding Lisa. The difference is night and day — she truly cares about the animals, not just the service. My two Poodles always look like they just stepped off a runway!"</p>
+        <div class="testi-author"><div class="testi-avatar">✂️</div><div><div class="testi-name">Emily R.</div><div class="testi-pet">Poodle Mom, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Lisa used the hypoallergenic shampoo for my sensitive-skin Bichon and the results were outstanding. No irritation, incredibly soft coat, and the most adorable haircut. This is the only groomer I trust."</p>
+        <div class="testi-author"><div class="testi-avatar">🌟</div><div><div class="testi-name">Monica T.</div><div class="testi-pet">Bichon Parent, Irvine</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finally a groomer who takes her time! No rushing, no stressed pets. My Shih Tzu Bella comes home happy and relaxed. The de-shedding treatment has also made a massive difference at home. Highly recommend!"</p>
+        <div class="testi-author"><div class="testi-avatar">🐾</div><div><div class="testi-name">David L.</div><div class="testi-pet">Shih Tzu Dad, Irvine</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">Get in Touch</div>
+    <h2 class="section-title reveal delay-1">Book Your Pet's Perfect Session</h2>
+    <div class="contact-inner" style="margin-top:56px">
+      <div class="contact-info">
+        <p class="section-sub reveal">Ready to give your fur baby the royal treatment? Reach out — Lisa would love to meet your pet and discuss the perfect grooming plan.</p>
+        <div class="contact-details">
+          <a href="tel:4252098493" class="contact-item reveal delay-1">
+            <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+            <div class="contact-item-info">
+              <span>Call or Text</span>
+              <strong>425-209-8493</strong>
+            </div>
+          </a>
+          <div class="contact-item reveal delay-2">
+            <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="contact-item-info">
+              <span>Location</span>
+              <strong>Irvine, California, USA</strong>
+            </div>
+          </div>
+          <div class="contact-item reveal delay-3">
+            <div class="contact-item-icon"><i class="fas fa-clock"></i></div>
+            <div class="contact-item-info">
+              <span>Hours</span>
+              <strong>Mon–Sat: 9AM – 6PM</strong>
+            </div>
+          </div>
+          <a href="https://www.instagram.com" target="_blank" class="contact-item reveal delay-4">
+            <div class="contact-item-icon"><i class="fab fa-instagram"></i></div>
+            <div class="contact-item-info">
+              <span>Follow on Instagram</span>
+              <strong>@lisasdoggrooming</strong>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="reveal delay-2">
+        <div class="contact-form-card">
+          <h3>Book an Appointment</h3>
+          <p>Tell us about your pet and we'll get back to you quickly!</p>
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="e.g. Sarah Johnson">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="e.g. (949) 555-0123">
+          </div>
+          <div class="form-group">
+            <label>Pet's Name &amp; Breed</label>
+            <input type="text" placeholder="e.g. Max, Golden Retriever">
+          </div>
+          <div class="form-group">
+            <label>Service Interested In</label>
+            <select>
+              <option>Full Grooming Package</option>
+              <option>Bath &amp; Brush Brush-Up</option>
+              <option>Puppy's First Groom</option>
+              <option>Add-On Specialty Care</option>
+              <option>Not sure yet — let's chat!</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Any Notes (optional)</label>
+            <textarea placeholder="Any special needs, sensitivities, or questions for Lisa..."></textarea>
+          </div>
+          <button class="form-submit" onclick="handleSubmit(this)">
+            <i class="fas fa-paw"></i> Send Booking Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="footer-logo">Lisa's<span> Grooming</span> 🐾</div>
+  <p class="footer-sub">Irvine, California — Where Every Pup Gets Royal Treatment</p>
+  <div class="social-row">
+    <a href="tel:4252098493" class="social-btn" title="Call"><i class="fas fa-phone"></i></a>
+    <a href="https://www.instagram.com" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.facebook.com" target="_blank" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+  </div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#why">About Lisa</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <p class="footer-copy">
+    © 2025 Lisa's Pet Grooming, Irvine CA. All rights reserved.<br>
+    Made with 🐾 and lots of love for pets.
+  </p>
+</footer>
+
+<!-- ==================== STICKY CALL BAR ==================== -->
+<a href="tel:4252098493" class="sticky-call">
+  <i class="fas fa-phone"></i>
+  <span>Call Lisa: 425-209-8493</span>
+  <span>📅 Book Now</span>
+</a>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ---- CURSOR ----
+const cursor = document.getElementById('cursor');
+const cursorEmojis = ['🐱','🐶','🐾','😺','🐕'];
+let cursorIdx = 0;
+let mx = -100, my = -100;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  // trail every Nth pixel
+  if(Math.random() < 0.12) spawnTrail(mx, my);
+});
+document.addEventListener('click', e => {
+  // switch cursor emoji
+  cursorIdx = (cursorIdx + 1) % cursorEmojis.length;
+  cursor.textContent = cursorEmojis[cursorIdx];
+  cursor.classList.add('clicking');
+  setTimeout(() => cursor.classList.remove('clicking'), 250);
+  burstEmojis(e.clientX, e.clientY);
+});
+
+function spawnTrail(x, y) {
+  const t = document.createElement('div');
+  t.className = 'cursor-trail';
+  t.textContent = ['🐾','·','🐾','·'][Math.floor(Math.random()*4)];
+  t.style.left = x + 'px';
+  t.style.top = y + 'px';
+  t.style.fontSize = (10 + Math.random()*8) + 'px';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 800);
+}
+
+// ---- CLICK BURST ----
+const BURST_EMOJIS = ['🐶','🐱','🐾','🐕','😺','❤️','✨','🌟'];
+function burstEmojis(x, y) {
+  const count = 8 + Math.floor(Math.random()*5);
+  for(let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'emoji-burst';
+    el.textContent = BURST_EMOJIS[Math.floor(Math.random()*BURST_EMOJIS.length)];
+    const angle = (360/count)*i + Math.random()*20;
+    const dist = 60 + Math.random()*100;
+    const dx = Math.cos(angle * Math.PI/180) * dist;
+    const dy = Math.sin(angle * Math.PI/180) * dist;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.setProperty('--dx', dx + 'px');
+    el.style.setProperty('--dy', dy + 'px');
+    el.style.setProperty('--dur', (0.8 + Math.random()*0.6) + 's');
+    el.style.fontSize = (16 + Math.random()*16) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+}
+
+// Touch tap burst for mobile
+document.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  burstEmojis(t.clientX, t.clientY);
+}, {passive:true});
+
+// ---- SCROLL REVEAL ----
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.1});
+revealEls.forEach(el => observer.observe(el));
+
+// ---- NAV SCROLL ----
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ---- MOBILE MENU ----
+function openMenu(){document.getElementById('mobileMenu').classList.add('open')}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
+
+// ---- FORM SUBMIT ----
+function handleSubmit(btn) {
+  btn.innerHTML = '🐾 Request Sent! We\'ll be in touch soon!';
+  btn.style.background = 'linear-gradient(135deg,#2d7a4f,#1C3A2F)';
+  btn.disabled = true;
+  burstEmojis(btn.getBoundingClientRect().left + btn.offsetWidth/2,
+               btn.getBoundingClientRect().top + btn.offsetHeight/2);
+}
+
+// ---- ANIMATED PAW COUNTER ----
+function animateStats(){
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = el.textContent;
+    const num = parseInt(target);
+    if(isNaN(num)) return;
+    const suffix = target.replace(/[0-9]/g,'');
+    let start = 0, duration = 1500;
+    const step = timestamp => {
+      if(!step.startTime) step.startTime = timestamp;
+      const progress = Math.min((timestamp - step.startTime)/duration, 1);
+      el.textContent = Math.floor(progress * num) + suffix;
+      if(progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+const statsObserver = new IntersectionObserver(entries => {
+  if(entries[0].isIntersecting){animateStats();statsObserver.disconnect()}
+}, {threshold:0.5});
+const statsEl = document.querySelector('.hero-stats');
+if(statsEl) statsObserver.observe(statsEl);
+
+// ---- MOBILE: Touch trail ----
+document.addEventListener('touchmove', e => {
+  const t = e.touches[0];
+  if(Math.random() < 0.08) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;left:${t.clientX}px;top:${t.clientY}px;
+      font-size:16px;pointer-events:none;z-index:9990;
+      transform:translate(-50%,-50%);opacity:0.8;
+      animation:trail-fade 0.8s ease forwards`;
+    el.textContent = Math.random()>0.5?'🐾':'•';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 800);
+  }
+}, {passive:true});
+</script>
+</body>
+</html>

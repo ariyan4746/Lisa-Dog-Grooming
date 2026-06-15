@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lisa Dog Grooming — Premium Dog Grooming in Irvine, CA</title>
+  <meta name="description" content="A passionate dog groomer ready to take good care of your beloved pets! Serving Irvine, CA. Call (425) 209-8493 to book."/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blush:   '#FFF5F8',
+            pink:    '#FBCFE8',
+            rose:    '#F472B6',
+            'rose-deep': '#EC4899',
+            navy:    '#1C1C2E',
+            muted:   '#6B7280',
+            card:    '#FFF0F5',
+            'pink-border': '#F9A8D4',
+          },
+          fontFamily: {
+            display: ['"DM Serif Display"', 'serif'],
+            body:    ['"DM Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft':       '0 4px 24px rgba(244,114,182,0.12)',
+            'soft-hover': '0 12px 40px rgba(244,114,182,0.22)',
+            'card':       '0 2px 16px rgba(28,28,46,0.07)',
+            'card-hover': '0 12px 36px rgba(28,28,46,0.13)',
+            'polaroid':   '0 8px 32px rgba(28,28,46,0.14)',
+          },
+          borderRadius: {
+            '4xl': '2rem',
+            '5xl': '2.5rem',
+          },
+        }
+      }
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #FFF5F8;
+      color: #1C1C2E;
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ─── */
+    #site-nav {
+      background: rgba(255, 245, 248, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(249, 168, 212, 0.2);
+      transition: box-shadow 0.3s;
+    }
+    #site-nav.scrolled { box-shadow: 0 4px 24px rgba(28,28,46,0.08); }
+
+    /* ─── Marquee ─── */
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-inner {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-inner:hover { animation-play-state: paused; }
+
+    /* ─── Polaroid stack ─── */
+    .polaroid {
+      background: #fff;
+      padding: 10px 10px 32px 10px;
+      box-shadow: 0 8px 32px rgba(28,28,46,0.13);
+      border-radius: 4px;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+    .polaroid:hover {
+      transform: rotate(0deg) scale(1.04) !important;
+      box-shadow: 0 20px 56px rgba(28,28,46,0.2);
+      z-index: 10;
+    }
+    .polaroid img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      border-radius: 2px;
+    }
+    .polaroid-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: 13px;
+      color: #6B7280;
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    /* ─── Service cards ─── */
+    .service-card {
+      background: #fff;
+      border: 1.5px solid rgba(249,168,212,0.3);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: default;
+    }
+    .service-card:hover {
+      transform: translateY(-7px) scale(1.01);
+      box-shadow: 0 16px 44px rgba(244,114,182,0.18);
+      border-color: rgba(244,114,182,0.5);
+    }
+    .service-card .service-detail {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .service-card:hover .service-detail {
+      max-height: 100px;
+      opacity: 1;
+    }
+
+    /* ─── Gallery ─── */
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      cursor: pointer;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: block;
+    }
+    .gallery-item:hover img { transform: scale(1.1); }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(28,28,46,0.65) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      border-radius: 1.25rem;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.25rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    /* ─── Accordion ─── */
+    .faq-item { border-bottom: 1px solid rgba(249,168,212,0.4); }
+    .faq-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 0;
+      cursor: pointer;
+      text-align: left;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1C1C2E;
+      transition: color 0.2s;
+    }
+    .faq-btn:hover { color: #EC4899; }
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #FFF0F5;
+      border: 1.5px solid rgba(249,168,212,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+      color: #EC4899;
+      transition: transform 0.35s ease, background 0.2s;
+    }
+    .faq-btn.open .faq-icon {
+      transform: rotate(45deg);
+      background: #EC4899;
+      color: #fff;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s ease, padding 0.3s ease;
+      font-size: 0.92rem;
+      color: #6B7280;
+      line-height: 1.7;
+      padding: 0;
+    }
+    .faq-answer.open {
+      max-height: 200px;
+      padding-bottom: 1.2rem;
+    }
+
+    /* ─── CTA buttons ─── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+      color: #fff;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 50px;
+      padding: 0.8rem 1.8rem;
+      font-size: 0.9rem;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 32px rgba(236,72,153,0.38);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: #EC4899;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      border-radius: 50px;
+      padding: 0.75rem 1.75rem;
+      font-size: 0.9rem;
+      border: 2px solid #F9A8D4;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover {
+      background: #FFF0F5;
+      border-color: #EC4899;
+      transform: translateY(-2px);
+    }
+
+    /* ─── Hamburger ─── */
+    .ham-line {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #1C1C2E;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+    #hamburger.open .ham-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    #hamburger.open .ham-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── Form ─── */
+    .form-input {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid rgba(249,168,212,0.4);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #1C1C2E;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .form-input:focus {
+      border-color: #F472B6;
+      box-shadow: 0 0 0 3px rgba(244,114,182,0.15);
+    }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #EC4899;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ─── Scroll-triggered reveal (GSAP handles this, but fallback) ─── */
+    .gsap-hidden { opacity: 0; }
+
+    /* ─── Floating paw cursor accent ─── */
+    @keyframes float-paw {
+      0%,100% { transform: translateY(0) rotate(-10deg); }
+      50%      { transform: translateY(-14px) rotate(8deg); }
+    }
+    .float-paw { animation: float-paw 4s ease-in-out infinite; }
+    .float-paw-delay { animation: float-paw 4s ease-in-out 1.5s infinite; }
+
+    /* ─── Section eyebrow ─── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #EC4899;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: #F9A8D4;
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-inner { animation: none; }
+      .polaroid { transition: none !important; }
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════
+     NAV
+═══════════════════════ -->
+<nav id="site-nav" class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-[66px] flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2 group" aria-label="Lisa Dog Grooming Home">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink to-rose-deep flex items-center justify-center text-white text-sm font-bold shadow-soft transition-transform group-hover:scale-110">
+        <i class="fa-solid fa-paw text-xs"></i>
+      </div>
+      <span class="font-display text-navy text-[1.05rem]">Lisa<span class="text-rose"> Dog </span>Grooming</span>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#services" class="text-sm font-medium text-muted hover:text-navy transition-colors">Services</a>
+      <a href="#gallery"  class="text-sm font-medium text-muted hover:text-navy transition-colors">Gallery</a>
+      <a href="#faq"      class="text-sm font-medium text-muted hover:text-navy transition-colors">FAQ</a>
+      <a href="#contact"  class="text-sm font-medium text-muted hover:text-navy transition-colors">Contact</a>
+      <a href="tel:4252098493" class="btn-primary text-sm px-5 py-2.5">
+        <i class="fa-solid fa-phone text-xs"></i> Book Now
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="hamburger" class="md:hidden flex flex-col gap-[5px] p-2 rounded-lg" aria-label="Toggle menu">
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden border-t border-pink-border/30" style="background:rgba(255,245,248,0.97);backdrop-filter:blur(16px);">
+    <div class="max-w-6xl mx-auto px-5 py-5 flex flex-col gap-4">
+      <a href="#services" class="text-base font-medium text-navy py-1 border-b border-pink-border/20" onclick="closeMenu()">Services</a>
+      <a href="#gallery"  class="text-base font-medium text-navy py-1 border-b border-pink-border/20" onclick="closeMenu()">Gallery</a>
+      <a href="#faq"      class="text-base font-medium text-navy py-1 border-b border-pink-border/20" onclick="closeMenu()">FAQ</a>
+      <a href="#contact"  class="text-base font-medium text-navy py-1 border-b border-pink-border/20" onclick="closeMenu()">Contact</a>
+      <a href="tel:4252098493" class="btn-primary justify-center mt-2" onclick="closeMenu()">
+        <i class="fa-solid fa-phone text-xs"></i> Call (425) 209-8493
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════
+     MARQUEE BAND
+═══════════════════════ -->
+<div class="fixed top-[66px] left-0 right-0 z-40 overflow-hidden bg-gradient-to-r from-rose/90 to-rose-deep/90 py-2 shadow-soft">
+  <div class="marquee-inner text-white text-xs font-semibold tracking-widest uppercase">
+    <!-- duplicated for seamless loop -->
+    <span class="px-8 flex items-center gap-3">
+      <i class="fa-solid fa-paw text-[8px] opacity-70"></i> Passionate Care
+      <i class="fa-solid fa-star text-[8px] opacity-70"></i> Professional Grooming
+      <i class="fa-solid fa-location-dot text-[8px] opacity-70"></i> Irvine's Best
+      <i class="fa-solid fa-shield-heart text-[8px] opacity-70"></i> 100% Safe &amp; Gentle
+      <i class="fa-solid fa-paw text-[8px] opacity-70"></i> Happy Pups Guaranteed
+      <i class="fa-solid fa-scissors text-[8px] opacity-70"></i> Certified Groomer
+      <i class="fa-solid fa-heart text-[8px] opacity-70"></i> Trusted in Irvine, CA
+      <i class="fa-solid fa-spa text-[8px] opacity-70"></i> Spa-Level Experience
+    </span>
+    <span class="px-8 flex items-center gap-3" aria-hidden="true">
+      <i class="fa-solid fa-paw text-[8px] opacity-70"></i> Passionate Care
+      <i class="fa-solid fa-star text-[8px] opacity-70"></i> Professional Grooming
+      <i class="fa-solid fa-location-dot text-[8px] opacity-70"></i> Irvine's Best
+      <i class="fa-solid fa-shield-heart text-[8px] opacity-70"></i> 100% Safe &amp; Gentle
+      <i class="fa-solid fa-paw text-[8px] opacity-70"></i> Happy Pups Guaranteed
+      <i class="fa-solid fa-scissors text-[8px] opacity-70"></i> Certified Groomer
+      <i class="fa-solid fa-heart text-[8px] opacity-70"></i> Trusted in Irvine, CA
+      <i class="fa-solid fa-spa text-[8px] opacity-70"></i> Spa-Level Experience
+    </span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════
+     HERO
+═══════════════════════ -->
+<section id="home" class="min-h-screen pt-[108px] pb-16 md:pb-24 flex items-center relative overflow-hidden">
+  <!-- Background blobs -->
+  <div class="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full opacity-30 pointer-events-none" style="background:radial-gradient(circle, #FBCFE8 0%, transparent 70%);"></div>
+  <div class="absolute -bottom-32 -left-20 w-[380px] h-[380px] rounded-full opacity-20 pointer-events-none" style="background:radial-gradient(circle, #F9A8D4 0%, transparent 70%);"></div>
+
+  <!-- Floating paw decorations -->
+  <div class="float-paw absolute top-32 right-[46%] text-pink/30 text-3xl pointer-events-none select-none" aria-hidden="true">🐾</div>
+  <div class="float-paw-delay absolute bottom-28 left-[8%] text-pink/20 text-2xl pointer-events-none select-none" aria-hidden="true">🐾</div>
+
+  <div class="max-w-6xl mx-auto px-5 md:px-8 w-full">
+    <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+      <!-- LEFT: Copy -->
+      <div>
+        <div class="eyebrow mb-5 gsap-hidden" id="hero-eyebrow">Irvine, California</div>
+
+        <h1 class="font-display text-[2.7rem] sm:text-5xl lg:text-[3.6rem] leading-[1.1] text-navy mb-6 gsap-hidden" id="hero-h1">
+          Premium Dog<br/>
+          Grooming in<br/>
+          <em class="text-rose not-italic">Irvine.</em>
+        </h1>
+
+        <p class="text-muted text-base md:text-lg leading-relaxed mb-8 max-w-md gsap-hidden" id="hero-sub">
+          A passionate dog groomer ready to take good care of your beloved pets — with a spa-quality touch, gentle handling, and a genuine love for every pup we meet.
+        </p>
+
+        <!-- Trust chips -->
+        <div class="flex flex-wrap gap-2.5 mb-9 gsap-hidden" id="hero-chips">
+          <span class="inline-flex items-center gap-1.5 bg-white border border-pink-border/40 rounded-full px-4 py-1.5 text-xs font-medium text-navy shadow-card">
+            <i class="fa-solid fa-shield-heart text-rose text-[10px]"></i> Fully Insured
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-white border border-pink-border/40 rounded-full px-4 py-1.5 text-xs font-medium text-navy shadow-card">
+            <i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 5-Star Rated
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-white border border-pink-border/40 rounded-full px-4 py-1.5 text-xs font-medium text-navy shadow-card">
+            <i class="fa-solid fa-heart text-rose text-[10px]"></i> All Breeds Welcome
+          </span>
+        </div>
+
+        <div class="flex flex-wrap gap-3 gsap-hidden" id="hero-ctas">
+          <a href="tel:4252098493" class="btn-primary text-[0.95rem] px-7 py-3.5">
+            <i class="fa-solid fa-phone text-xs"></i> Call / Book Now
+          </a>
+          <a href="#gallery" class="btn-secondary text-[0.95rem] px-7 py-3.5">
+            <i class="fa-solid fa-images text-xs"></i> View Gallery
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT: Polaroid collage -->
+      <div class="relative h-[440px] md:h-[520px] gsap-hidden" id="hero-collage">
+        <!-- Polaroid 1 — back left -->
+        <div class="polaroid absolute" id="pol1" style="width:190px;top:20px;left:0;transform:rotate(-6deg);z-index:1;">
+          <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=80&fit=crop" alt="Happy golden retriever after grooming"/>
+          <div class="polaroid-label">After Bath ✨</div>
+        </div>
+        <!-- Polaroid 2 — top right -->
+        <div class="polaroid absolute" id="pol2" style="width:200px;top:0;right:10px;transform:rotate(5deg);z-index:2;">
+          <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&q=80&fit=crop" alt="Dogs playing"/>
+          <div class="polaroid-label">Best Friends 🐾</div>
+        </div>
+        <!-- Polaroid 3 — center featured -->
+        <div class="polaroid absolute" id="pol3" style="width:220px;top:110px;left:50%;transform:translateX(-50%) rotate(-1.5deg);z-index:3;">
+          <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&q=80&fit=crop" alt="Dog at the groomer"/>
+          <div class="polaroid-label">Fresh &amp; Clean 🛁</div>
+        </div>
+        <!-- Polaroid 4 — bottom left -->
+        <div class="polaroid absolute" id="pol4" style="width:175px;bottom:30px;left:10px;transform:rotate(7deg);z-index:2;">
+          <img src="https://images.unsplash.com/photo-1583512603806-077998240c7a?w=400&q=80&fit=crop" alt="Fluffy dog portrait"/>
+          <div class="polaroid-label">Fluffy &amp; Happy 💕</div>
+        </div>
+        <!-- Polaroid 5 — bottom right -->
+        <div class="polaroid absolute" id="pol5" style="width:180px;bottom:20px;right:0;transform:rotate(-4deg);z-index:2;">
+          <img src="https://images.unsplash.com/photo-1593134257782-e89567b7718a?w=400&q=80&fit=crop" alt="Cute groomed dog"/>
+          <div class="polaroid-label">Spa Day 🌸</div>
+        </div>
+
+        <!-- Floating badge -->
+        <div class="absolute -right-4 md:-right-8 top-16 bg-white border border-pink-border/30 rounded-2xl px-4 py-3 shadow-card z-10" style="animation:float-paw 3.5s ease-in-out infinite;">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-pink to-rose-deep flex items-center justify-center text-white text-sm">
+              <i class="fa-solid fa-scissors"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-navy">Licensed</div>
+              <div class="text-[10px] text-muted">Grooming Pro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════
+     SERVICES
+═══════════════════════ -->
+<section id="services" class="py-20 md:py-28 relative" style="background:#fff;">
+  <!-- Pink top wave -->
+  <div class="absolute top-0 left-0 right-0 h-10 overflow-hidden">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" class="w-full h-full">
+      <path d="M0,40 Q360,0 720,20 Q1080,40 1440,10 L1440,0 L0,0Z" fill="#FFF5F8"/>
+    </svg>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14">
+      <div class="eyebrow mb-3 justify-center gsap-fade">What We Do</div>
+      <h2 class="font-display text-4xl md:text-5xl text-navy mb-4 gsap-fade">Services Tailored<br/><em class="text-rose not-italic">for Every Pup</em></h2>
+      <p class="text-muted text-base max-w-lg mx-auto gsap-fade">Every dog is different. We listen, we care, and we customize every session to match your pet's temperament, coat type, and needs.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 gsap-stagger-parent">
+
+      <!-- Card 1 -->
+      <div class="service-card gsap-stagger-child">
+        <div class="h-44 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=500&q=80&fit=crop" alt="Full grooming service" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white mb-3">
+            <i class="fa-solid fa-scissors text-sm"></i>
+          </div>
+          <h3 class="font-display text-lg text-navy mb-1">Full Grooming</h3>
+          <p class="text-muted text-sm">Bath, blow-dry, haircut, brush, nail trim &amp; ear clean — the complete luxury treatment.</p>
+          <div class="service-detail mt-3 text-xs text-rose font-medium">
+            <i class="fa-solid fa-clock mr-1"></i> 90–120 min &nbsp;·&nbsp; All breeds
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card gsap-stagger-child">
+        <div class="h-44 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=500&q=80&fit=crop" alt="Bath and brush service" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white mb-3">
+            <i class="fa-solid fa-shower text-sm"></i>
+          </div>
+          <h3 class="font-display text-lg text-navy mb-1">Bath &amp; Brush</h3>
+          <p class="text-muted text-sm">Premium shampoo &amp; conditioner, thorough blow-dry, and a full brush-out. Coat-type specific products.</p>
+          <div class="service-detail mt-3 text-xs text-rose font-medium">
+            <i class="fa-solid fa-clock mr-1"></i> 45–75 min
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card gsap-stagger-child">
+        <div class="h-44 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1583512603806-077998240c7a?w=500&q=80&fit=crop" alt="Nail trimming service" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white mb-3">
+            <i class="fa-solid fa-hand-scissors text-sm"></i>
+          </div>
+          <h3 class="font-display text-lg text-navy mb-1">Nail Trimming</h3>
+          <p class="text-muted text-sm">Precise, safe nail trimming and filing by a gentle, experienced hand. Includes paw pad massage.</p>
+          <div class="service-detail mt-3 text-xs text-rose font-medium">
+            <i class="fa-solid fa-clock mr-1"></i> 15–20 min add-on
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="service-card gsap-stagger-child">
+        <div class="h-44 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1593134257782-e89567b7718a?w=500&q=80&fit=crop" alt="Dog spa treatment" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"/>
+        </div>
+        <div class="p-5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white mb-3">
+            <i class="fa-solid fa-spa text-sm"></i>
+          </div>
+          <h3 class="font-display text-lg text-navy mb-1">Spa Treatments</h3>
+          <p class="text-muted text-sm">Conditioning masks, blueberry facials, aromatherapy rinse, and deep-coat hydration treatments.</p>
+          <div class="service-detail mt-3 text-xs text-rose font-medium">
+            <i class="fa-solid fa-clock mr-1"></i> Add-on to any service
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="text-center mt-12 gsap-fade">
+      <a href="tel:4252098493" class="btn-primary px-8 py-3.5 text-[0.95rem]">
+        <i class="fa-solid fa-phone text-xs"></i> Call to Schedule: (425) 209-8493
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════
+     GALLERY
+═══════════════════════ -->
+<section id="gallery" class="py-20 md:py-28 relative overflow-hidden" style="background:#FFF5F8;">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14">
+      <div class="eyebrow mb-3 justify-center gsap-fade">Before &amp; After</div>
+      <h2 class="font-display text-4xl md:text-5xl text-navy mb-4 gsap-fade">Transformation<br/><em class="text-rose not-italic">Gallery</em></h2>
+      <p class="text-muted text-base max-w-md mx-auto gsap-fade">Every pup deserves to look and feel their best. Here's a glimpse of the love we pour into every session.</p>
+    </div>
+
+    <!-- Masonry-style grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 gsap-stagger-parent">
+
+      <div class="gallery-item aspect-square gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80&fit=crop" alt="Golden retriever groomed"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Golden Retriever</span>
+        </div>
+      </div>
+
+      <div class="gallery-item row-span-2 gsap-stagger-child" style="height:100%;">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&q=80&fit=crop" alt="Two dogs" style="height:100%;"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Best Friends Session</span>
+        </div>
+      </div>
+
+      <div class="gallery-item aspect-square gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1583512603806-077998240c7a?w=600&q=80&fit=crop" alt="Fluffy white dog"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Full Groom &amp; Style</span>
+        </div>
+      </div>
+
+      <div class="gallery-item aspect-square gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&q=80&fit=crop" alt="Dog being groomed"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Grooming Session</span>
+        </div>
+      </div>
+
+      <div class="gallery-item aspect-square gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1593134257782-e89567b7718a?w=600&q=80&fit=crop" alt="Cute groomed dog"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Spa Treatment Day</span>
+        </div>
+      </div>
+
+      <div class="gallery-item aspect-square gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=600&q=80&fit=crop" alt="Happy dog"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Bath &amp; Brush</span>
+        </div>
+      </div>
+
+      <div class="gallery-item col-span-2 h-52 gsap-stagger-child">
+        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=900&q=80&fit=crop" alt="Happy dog smiling"/>
+        <div class="gallery-overlay">
+          <span class="text-white text-sm font-semibold">Feeling Fresh in Irvine 🐾</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-10 gsap-fade">
+      <p class="text-muted text-sm mb-4">Follow us on Instagram for daily transformations</p>
+      <a href="https://instagram.com/lisa_dog_grooming" target="_blank" rel="noopener" class="btn-secondary px-7 py-3">
+        <i class="fa-brands fa-instagram"></i> @lisa_dog_grooming
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════
+     TRUST STRIP
+═══════════════════════ -->
+<section class="py-14 relative overflow-hidden" style="background:linear-gradient(135deg,#1C1C2E 0%,#2d1b3d 100%);">
+  <div class="max-w-5xl mx-auto px-5 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div class="gsap-fade">
+      <div class="text-4xl font-display text-rose mb-1">100%</div>
+      <div class="text-white/60 text-sm">Safe &amp; Gentle</div>
+    </div>
+    <div class="gsap-fade">
+      <div class="text-4xl font-display text-rose mb-1">All</div>
+      <div class="text-white/60 text-sm">Breeds Welcome</div>
+    </div>
+    <div class="gsap-fade">
+      <div class="text-4xl font-display text-rose mb-1">5★</div>
+      <div class="text-white/60 text-sm">Irvine's Favourite</div>
+    </div>
+    <div class="gsap-fade">
+      <div class="text-4xl font-display text-rose mb-1">♥</div>
+      <div class="text-white/60 text-sm">Passionate About Dogs</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════
+     FAQ
+═══════════════════════ -->
+<section id="faq" class="py-20 md:py-28" style="background:#fff;">
+  <div class="max-w-3xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-12">
+      <div class="eyebrow mb-3 justify-center gsap-fade">Questions Answered</div>
+      <h2 class="font-display text-4xl md:text-5xl text-navy mb-4 gsap-fade">Common Questions</h2>
+      <p class="text-muted text-base gsap-fade">Everything you need to know before booking your pup's first session with Lisa.</p>
+    </div>
+
+    <div id="faq-list" class="gsap-fade">
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          How do I schedule an appointment?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          Simply give us a call or text at <a href="tel:4252098493" class="text-rose font-medium hover:underline">(425) 209-8493</a>. We'll discuss your dog's needs, choose a suitable time, and confirm everything before your appointment. We recommend booking a few days in advance, especially on weekends.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          How do you handle nervous or anxious dogs?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          Patience is our superpower. We use calm, gentle handling and take our time at each dog's pace. We never rush or force. For very anxious dogs, we may split grooming over two shorter sessions to build comfort and trust gradually.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          What breeds do you groom?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          We welcome all breeds and sizes — from tiny Chihuahuas to large Golden Retrievers and everything in between. Each coat type is handled with breed-specific techniques and appropriate products for the best results.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          How long does a grooming session take?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          Session length depends on the service and your dog's size and coat condition. A simple bath &amp; brush takes 45–75 minutes, while a full grooming package may take up to 2 hours. We'll give you an estimate when you book.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          Are your products safe for my dog?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          Absolutely. We only use professional-grade, pet-safe, and skin-friendly shampoos and conditioners. If your dog has specific skin sensitivities or allergies, just let us know and we'll choose the most appropriate products.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          What areas do you serve in Irvine?
+          <span class="faq-icon"><i class="fa-solid fa-plus text-xs"></i></span>
+        </button>
+        <div class="faq-answer">
+          We are based in Irvine, CA and serve clients throughout the city and surrounding areas. Contact us to confirm availability for your specific location.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════
+     CONTACT / FOOTER
+═══════════════════════ -->
+<section id="contact" class="py-20 md:py-28 relative overflow-hidden" style="background:#FFF5F8;">
+  <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-20 pointer-events-none" style="background:radial-gradient(circle, #FBCFE8, transparent);"></div>
+
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+      <!-- Left: Info -->
+      <div>
+        <div class="eyebrow mb-4 gsap-fade">Get in Touch</div>
+        <h2 class="font-display text-4xl md:text-5xl text-navy mb-5 gsap-fade">
+          Ready for Your Pup's<br/><em class="text-rose not-italic">Glow Up?</em>
+        </h2>
+        <p class="text-muted text-base leading-relaxed mb-8 max-w-sm gsap-fade">
+          Reach out to book your dog's next grooming appointment. We'd love to meet your fur baby and give them the spa experience they deserve.
+        </p>
+
+        <div class="space-y-5 gsap-fade">
+          <a href="tel:4252098493" class="flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white shadow-soft transition-transform group-hover:scale-110">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-rose uppercase tracking-widest">Tap to Call</div>
+              <div class="text-navy font-semibold text-lg">(425) 209-8493</div>
+            </div>
+          </a>
+
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white shadow-soft">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-rose uppercase tracking-widest">Location</div>
+              <div class="text-navy font-semibold">Irvine, California</div>
+            </div>
+          </div>
+
+          <a href="https://instagram.com/lisa_dog_grooming" target="_blank" rel="noopener" class="flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white shadow-soft transition-transform group-hover:scale-110">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-rose uppercase tracking-widest">Instagram</div>
+              <div class="text-navy font-semibold">@lisa_dog_grooming</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Quick call CTA -->
+        <div class="mt-10 gsap-fade">
+          <a href="tel:4252098493" class="btn-primary px-8 py-4 text-base">
+            <i class="fa-solid fa-phone-volume text-sm"></i> Call Us Now
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="gsap-fade">
+        <div class="bg-white rounded-4xl p-7 md:p-10 border border-pink-border/30 shadow-soft">
+          <h3 class="font-display text-2xl text-navy mb-6">Book an Appointment</h3>
+
+          <div id="form-success" style="display:none;" class="text-center py-10">
+            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-pink to-rose-deep flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+              <i class="fa-solid fa-paw"></i>
+            </div>
+            <h4 class="font-display text-xl text-navy mb-2">Request Received!</h4>
+            <p class="text-muted text-sm">We'll call or text you at the number provided to confirm your dog's appointment. See you soon! 🐾</p>
+          </div>
+
+          <form id="contact-form" onsubmit="handleForm(event)" novalidate>
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="form-label" for="owner">Your Name</label>
+                <input type="text" id="owner" name="owner" class="form-input" placeholder="Jane Smith" required/>
+              </div>
+              <div>
+                <label class="form-label" for="dog-name">Dog's Name</label>
+                <input type="text" id="dog-name" name="dogName" class="form-input" placeholder="Buddy" required/>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="form-label" for="breed">Breed</label>
+                <input type="text" id="breed" name="breed" class="form-input" placeholder="e.g. Labrador"/>
+              </div>
+              <div>
+                <label class="form-label" for="phone-contact">Your Phone</label>
+                <input type="tel" id="phone-contact" name="phone" class="form-input" placeholder="(555) 000-0000" required/>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label" for="service-select">Service Interested In</label>
+              <select id="service-select" name="service" class="form-input">
+                <option value="">Select a service…</option>
+                <option>Full Grooming Package</option>
+                <option>Bath &amp; Brush</option>
+                <option>Nail Trimming</option>
+                <option>Spa Treatment</option>
+                <option>Not Sure — Please Advise!</option>
+              </select>
+            </div>
+
+            <div class="mb-5">
+              <label class="form-label" for="date">Preferred Date</label>
+              <input type="date" id="date" name="date" class="form-input" required/>
+            </div>
+
+            <div class="mb-6">
+              <label class="form-label" for="notes">Additional Notes</label>
+              <textarea id="notes" name="notes" rows="3" class="form-input resize-none" placeholder="Any special needs, sensitivities, or preferences for your pup…"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full justify-center py-4 text-base">
+              <i class="fa-solid fa-paw text-sm"></i> Send Booking Request
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer style="background:#1C1C2E;" class="py-10">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 flex flex-col md:flex-row items-center justify-between gap-5">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-full bg-gradient-to-br from-pink to-rose flex items-center justify-center text-white text-xs">
+        <i class="fa-solid fa-paw"></i>
+      </div>
+      <span class="font-display text-white/90 text-sm">Lisa Dog Grooming &nbsp;·&nbsp; Irvine, CA</span>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="tel:4252098493" class="text-white/50 text-sm hover:text-white transition-colors">(425) 209-8493</a>
+      <a href="https://instagram.com/lisa_dog_grooming" target="_blank" rel="noopener" aria-label="Instagram"
+         class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all">
+        <i class="fa-brands fa-instagram text-xs"></i>
+      </a>
+    </div>
+    <p class="text-white/30 text-xs">© 2025 Lisa Dog Grooming. All rights reserved.</p>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════
+     JAVASCRIPT
+═══════════════════════ -->
+<script>
+  /* ─── Nav scroll class ─── */
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 24), { passive: true });
+
+  /* ─── Hamburger ─── */
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('mobile-menu');
+  ham.addEventListener('click', () => {
+    const open = mob.classList.toggle('open');
+    ham.classList.toggle('open', open);
+  });
+  function closeMenu() {
+    mob.classList.remove('open');
+    ham.classList.remove('open');
+  }
+
+  /* ─── FAQ accordion ─── */
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-btn.open').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.classList.remove('open');
+    });
+    if (!isOpen) {
+      btn.classList.add('open');
+      answer.classList.add('open');
+    }
+  }
+
+  /* ─── Form ─── */
+  function handleForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('contact-form');
+    const success = document.getElementById('form-success');
+    // Basic validation
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(f => {
+      if (!f.value.trim()) {
+        valid = false;
+        f.style.borderColor = '#F472B6';
+        f.addEventListener('input', () => { f.style.borderColor = ''; }, { once: true });
+      }
+    });
+    if (!valid) return;
+    const btn = form.querySelector('[type=submit]');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> Sending…';
+    btn.disabled = true;
+    setTimeout(() => {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }, 1100);
+  }
+
+  /* ─── Set min date ─── */
+  const dateInput = document.getElementById('date');
+  if (dateInput) {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    dateInput.min = d.toISOString().split('T')[0];
+  }
+
+  /* ─── GSAP Animations ─── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero sequence
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('#hero-eyebrow', { opacity: 0, y: 20, duration: 0.6 })
+    .from('#hero-h1',      { opacity: 0, y: 30, duration: 0.8 }, '-=0.3')
+    .from('#hero-sub',     { opacity: 0, y: 20, duration: 0.7 }, '-=0.4')
+    .from('#hero-chips',   { opacity: 0, y: 16, duration: 0.6 }, '-=0.3')
+    .from('#hero-ctas',    { opacity: 0, y: 16, duration: 0.6 }, '-=0.3');
+
+  // Polaroid stack entrance
+  const polTl = gsap.timeline({ delay: 0.3, defaults: { ease: 'back.out(1.4)' } });
+  polTl
+    .from('#hero-collage', { opacity: 0, duration: 0.5 })
+    .from('#pol1', { opacity: 0, x: -40, y: 20, rotation: -15, duration: 0.7 }, '-=0.2')
+    .from('#pol2', { opacity: 0, x: 40,  y: -20, rotation: 15, duration: 0.7 }, '-=0.4')
+    .from('#pol3', { opacity: 0, y: 40,  scale: 0.85, duration: 0.8 }, '-=0.4')
+    .from('#pol4', { opacity: 0, x: -30, y: 30, rotation: 10, duration: 0.7 }, '-=0.4')
+    .from('#pol5', { opacity: 0, x: 30,  y: 30, rotation: -8, duration: 0.7 }, '-=0.4');
+
+  // Gentle floating on polaroids
+  [
+    { el: '#pol1', yAmt: -8,  dur: 3.8, delay: 0 },
+    { el: '#pol2', yAmt: -10, dur: 4.2, delay: 0.5 },
+    { el: '#pol3', yAmt: -7,  dur: 3.5, delay: 1.0 },
+    { el: '#pol4', yAmt: -9,  dur: 4.0, delay: 0.8 },
+    { el: '#pol5', yAmt: -8,  dur: 3.7, delay: 0.3 },
+  ].forEach(({ el, yAmt, dur, delay }) => {
+    gsap.to(el, {
+      y: yAmt,
+      duration: dur,
+      delay,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
+  });
+
+  // Scroll-triggered fades
+  document.querySelectorAll('.gsap-fade').forEach(el => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+      opacity: 0,
+      y: 24,
+      duration: 0.7,
+      ease: 'power2.out',
+    });
+  });
+
+  // Staggered card reveals
+  document.querySelectorAll('.gsap-stagger-parent').forEach(parent => {
+    const children = parent.querySelectorAll('.gsap-stagger-child');
+    gsap.from(children, {
+      scrollTrigger: { trigger: parent, start: 'top 82%', toggleActions: 'play none none none' },
+      opacity: 0,
+      y: 36,
+      scale: 0.97,
+      duration: 0.65,
+      stagger: 0.1,
+      ease: 'power2.out',
+    });
+  });
+
+  // Trust strip counter-like number reveal
+  document.querySelectorAll('#faq-list').forEach(el => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top 85%' },
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: 'power2.out',
+    });
+  });
+</script>
+
+</body>
+</html>
